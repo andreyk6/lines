@@ -4,10 +4,11 @@
 using namespace std;
 
 int DetectLine(int **&field,int n){
-	int tempLength,maxLength=0,tempColor,i,j=0;
+	int tempLength,maxLength=0,tempColor,i,j=0,totalLines=0;
 
 	for (i=0;i<n;i++){
 		//Поиск самой длинной линии по горизонтали		
+		maxLength=0;
 		tempLength=0;
 		tempColor=field[i][0];
 		for (j=0;j<n;j++){
@@ -23,9 +24,10 @@ int DetectLine(int **&field,int n){
 			}
 		}
 		
-		if(maxLength>=5) return 1;
+		if(maxLength>=5) totalLines++;
 
 		//Поиск самой длинной линии по вертикали
+		maxLength=0;
 		tempLength=0;
 		tempColor=field[0][i];
 		for (j=0;j<n;j++){
@@ -41,14 +43,14 @@ int DetectLine(int **&field,int n){
 			}
 		}
 
-		if(maxLength>=5) return 1;
+		if(maxLength>=5) totalLines++;
 
 	}
-	return 0;
+	return totalLines;
 }
 
 int ReadAndMove(int **&field,int n){
-	int x,y,x2,y2;
+	int x,y,x2,y2,result;
 	string strParam,strData,strColor,strTemp;
 
 	//Читаем начальные параметры
@@ -72,7 +74,7 @@ int ReadAndMove(int **&field,int n){
 		if(x>=0 && x<n && y>=0 && y<n)
 			if (strColor=="red") field[y][x]=1; else
 				if (strColor=="green") field[y][x]=2; else
-					if (strColor=="blue") field[y][x]=3;
+					if (strColor=="blue") field[y][x]=3; else return 0;
 
 		cin >> strParam;
 		cin >> strData;
@@ -108,9 +110,11 @@ int ReadAndMove(int **&field,int n){
 			if(field[y2][x2]==0 && field[y][x]!=0){
 				field[y2][x2]=field[y][x];
 				field[y][x]=0;
-			}
+			} else return 0;
 
-		if(DetectLine(field,n)==1) return 1;
+
+		result = DetectLine(field,n);
+		if (result>=1) return result;
 
 		if (cin.eof()) break;
 		cin >> strParam;
@@ -124,8 +128,8 @@ int main(){
 	int n; 
 	string strParam;
 	
-//	freopen("input.txt","r",stdin);
-//	freopen("output.txt","w",stdout);
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
 
 	//Читаем размер
 	cin >> strParam >> n;
@@ -139,7 +143,7 @@ int main(){
 			field[i][j]=0;
 
 	//Заполняем массив входными данными и двигаем шарики
-	if (ReadAndMove(field,n)==1) cout << "true"; else cout<<"false";
+	cout << ReadAndMove(field,n);
 
 	delete []field;
 	return 0;
