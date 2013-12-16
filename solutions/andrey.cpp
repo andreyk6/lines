@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 int DetectLine(int **&field,int n){
